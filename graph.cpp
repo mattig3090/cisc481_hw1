@@ -7,9 +7,10 @@ class Graph{ // This is essentially being used to create a given node
     int id; // this will serve as the identifier for a given node for creating edges and things like that.
     int cost; // this will represent the cost to achieve this state from the previous state
     int cakes[4]; // this will represent the current stack of pancakes at this given node
+    list<string> fringe;
     list<int> *adj; // this will be used to track what nodes are able to be traveled to from our current node
     int start; // this is gonna be a identifier for the initial node in the thing
-    void DFSUtil(int v, bool visited[]);
+    bool DFSUtil(int cakes[], list<string> fringe);
     void buildArr(string input);
     int getCost(int cakes[], int flipSpot); // this is a little helper that we're making to help us get the cost of flipping a given set of pancakes
     void flipCakes(int cakes[], int flipSpot); // this is a helper that is going to do the actual flipping. The cost is calculated in getCost.
@@ -19,7 +20,7 @@ public:
     Graph(int id, int cost);
     void addEdge(int v, int w); // this will be connecting points
     void aStar();
-    void DFS(int v);
+    void DFS(int cakes[], list<int> fringe);
 };
 
 Graph::Graph(int id, int cost){
