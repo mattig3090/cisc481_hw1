@@ -13,6 +13,7 @@ class Graph{ // This is essentially being used to create a given node
     void buildArr(string input);
     int getCost(int cakes[], int flipSpot); // this is a little helper that we're making to help us get the cost of flipping a given set of pancakes
     void flipCakes(int cakes[], int flipSpot); // this is a helper that is going to do the actual flipping. The cost is calculated in getCost.
+    // note. We should be calling getCost() and flipCakes() SEPARATELY!!!
     
 public:
     Graph(int id, int cost);
@@ -29,20 +30,41 @@ Graph::Graph(int id, int cost){
 
 int getCost(int flipSpot){ // the big thing for this is, since we know there's only four pancakes, we just need to know where in the stack we're inserting the spatula
     switch(flipSpot){
+        case 0:
+            return 4;
+            break;
         case 1:
             return 3; // because in the stack, it's being inserted between the 3rd and 4th pancakes
             break;
         case 2:
             return 2; // in the stack, being inserted between 2nd and 3rd pancakes
             break;
-        case 3:
-            return 1; // in the stack, being inserted between the 1st and 2nd pancakes
-            break;
     }
 }
 
-void Graph::flipCakes(int cakes[], int flipSpot){
-
+void Graph::flipCakes(int cakes[], int flipSpot){ // we're essentially reversing the order of whatever pancakes we are flipping
+    switch(flipSpot){ // determines what to do based on the value of 'flipSpot'
+        case 0: // this is flipping literally THE ENTIRE STACK (from a comp sci perspective this makes sense but from a food perspective... WHY WOULD YOU DO THIS)
+            // Obviously there's so many different ways we can do this, but for sanity's sake let's just swap the two outer cakes, and then the two inner ones
+            int temp = cakes[0];
+            cakes[0] = cakes[3];
+            cakes[3] = temp;
+            temp = cakes[1];
+            cakes[1] = cakes[2];
+            cakes[2] = temp;
+            // probably not the best way, but at the end of the day the problem's about searches, not flipping pancakes.
+            break;
+        case 1: // here we are flipping the top 3 cakes. We can just swap the first and third cake, as the middle one in this is virtually unaffected.
+            int temp = cakes[0];
+            cakes[0] = cakes[2];
+            cakes[2] = temp;
+            break;
+        case 2: // here, we're just flipping the top 2 cakes. Just swap them! Make this easy on yourself dangit!!!
+            int temp = cakes[0];
+            cakes[0] = cakes[1];
+            cakes[1] = temp;
+            break;
+    }
 }
 
 void Graph::addEdge(int v, int w){
