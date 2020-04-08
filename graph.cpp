@@ -12,6 +12,7 @@ class Graph{ // This is essentially being used to create a given node
     int start; // this is gonna be a identifier for the initial node in the thing
     bool DFSUtil(int cakes[], list<string> fringe);
     void buildArr(string input);
+    void goBack(int cakes[], list<string> fringe);
     int getCost(int cakes[], int flipSpot); // this is a little helper that we're making to help us get the cost of flipping a given set of pancakes
     void flipCakes(int cakes[], int flipSpot); // this is a helper that is going to do the actual flipping. The cost is calculated in getCost.
     // note. We should be calling getCost() and flipCakes() SEPARATELY!!!
@@ -19,8 +20,8 @@ class Graph{ // This is essentially being used to create a given node
 public:
     Graph(int id, int cost);
     void addEdge(int v, int w); // this will be connecting points
-    void aStar();
-    void DFS(int cakes[], list<int> fringe);
+    void aStar(int cakes[], list<string> fringe);
+    void DFS(int cakes[], list<string> fringe);
 };
 
 Graph::Graph(int id, int cost){
@@ -32,12 +33,15 @@ Graph::Graph(int id, int cost){
 int getCost(int flipSpot){ // the big thing for this is, since we know there's only four pancakes, we just need to know where in the stack we're inserting the spatula
     switch(flipSpot){
         case 0:
+            cout << "Cost is 4" << endl;
             return 4;
             break;
         case 1:
+            cout << "Cost is 3" << endl;
             return 3; // because in the stack, it's being inserted between the 3rd and 4th pancakes
             break;
         case 2:
+            cout << "Cost is 2" << endl;
             return 2; // in the stack, being inserted between 2nd and 3rd pancakes
             break;
     }
@@ -47,6 +51,7 @@ void Graph::flipCakes(int cakes[], int flipSpot){ // we're essentially reversing
     switch(flipSpot){ // determines what to do based on the value of 'flipSpot'
         case 0: // this is flipping literally THE ENTIRE STACK (from a comp sci perspective this makes sense but from a food perspective... WHY WOULD YOU DO THIS)
             // Obviously there's so many different ways we can do this, but for sanity's sake let's just swap the two outer cakes, and then the two inner ones
+            cout << "Flipping entire stack" << endl;
             int temp = cakes[0];
             cakes[0] = cakes[3];
             cakes[3] = temp;
@@ -56,11 +61,13 @@ void Graph::flipCakes(int cakes[], int flipSpot){ // we're essentially reversing
             // probably not the best way, but at the end of the day the problem's about searches, not flipping pancakes.
             break;
         case 1: // here we are flipping the top 3 cakes. We can just swap the first and third cake, as the middle one in this is virtually unaffected.
+            cout << "Flipping top 3 pancakes" << endl;
             int temp = cakes[0];
             cakes[0] = cakes[2];
             cakes[2] = temp;
             break;
         case 2: // here, we're just flipping the top 2 cakes. Just swap them! Make this easy on yourself dangit!!!
+            cout << "Flipping top 2 pancakes" << endl;
             int temp = cakes[0];
             cakes[0] = cakes[1];
             cakes[1] = temp;

@@ -17,21 +17,27 @@ bool Graph::DFSUtil(int cakes[], list<string> fringe){ // this is just adding th
     std::list<string>::iterator it; // this gonna be what goes through and sees if the stack exists in the fringe
     it = find(fringe.begin(), fringe.end(), cakeString);
     if(it != fringe.end()){ // meaning that this already exists in the fringe, meaning there's probably a better solution to this somewhere. Just NOT HERE
-        return false;
+        return false; // this will trigger the DFS function to use the function fringe.pop_back()
     }
     else{ // means that this cake does NOT already exist in the fringe, meaning we might find a potential winner here! (yuh)
-        fringe.push_back(cakeString);
+        fringe.push_back(cakeString); // so add that bad boy into the fringe!
         return true;
     }
 }
 
-void Graph::DFS(int cakes[], list<int> fringe){ // treating this essentially like a normal DFS. This is a traversal of all things reachable from this given node. Since we are going to likely run this
-    // recursively, we can pass in the current stack of cakes that we are looking at.
-    // the first time this runs, "cakes[]" represents the start state of our stack!
-    
+void Graph::goBack(int cakes[], list<string> fringe){ // this is gonna let us go back to a previous level in our graph. This'll be useful for both DFS and a*
+
 }
 
-void Graph::aStar(){
+void Graph::DFS(int cakes[], list<string> fringe){ // treating this essentially like a normal DFS. This is a traversal of all things reachable from this given node. Since we are going to likely run this
+    // recursively, we can pass in the current stack of cakes that we are looking at.
+    // the first time this runs, "cakes[]" represents the start state of our stack!
+    if(DFSUtil(cakes, fringe) == false){ // let's check right out of the gate and make sure that we don't have to go back up a level
+        goBack(cakes)
+    }
+}
+
+void Graph::aStar(int cakes[], list<string> fringe){
     
 }
 
