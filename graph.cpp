@@ -12,7 +12,7 @@ class Graph{ // This is essentially being used to create a given node
     void DFSUtil(int v, bool visited[]);
     void buildArr(string input);
     int getCost(int cakes[], int flipSpot); // this is a little helper that we're making to help us get the cost of flipping a given set of pancakes
-    int* flipCakes(int cakes[], int flipSpot); // this is a helper that is going to do the actual flipping. The cost is calculated in getCost.
+    void flipCakes(int cakes[], int flipSpot); // this is a helper that is going to do the actual flipping. The cost is calculated in getCost.
     
 public:
     Graph(int id, int cost);
@@ -25,6 +25,24 @@ Graph::Graph(int id, int cost){
     this->id = id;
     this->cost = cost;
     adj = new list<int>[];
+}
+
+int getCost(int flipSpot){ // the big thing for this is, since we know there's only four pancakes, we just need to know where in the stack we're inserting the spatula
+    switch(flipSpot){
+        case 1:
+            return 3; // because in the stack, it's being inserted between the 3rd and 4th pancakes
+            break;
+        case 2:
+            return 2; // in the stack, being inserted between 2nd and 3rd pancakes
+            break;
+        case 3:
+            return 1; // in the stack, being inserted between the 1st and 2nd pancakes
+            break;
+    }
+}
+
+void Graph::flipCakes(int cakes[], int flipSpot){
+
 }
 
 void Graph::addEdge(int v, int w){
