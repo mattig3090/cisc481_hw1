@@ -7,8 +7,8 @@ using namespace std;
 class Graph{ // This is essentially being used to create a given node
     int id; // this will serve as the identifier for a given node for creating edges and things like that.
     //int cost; // this will represent the cost to achieve this state from the previous state
-    int cakes[4]; // this will represent the current stack of pancakes at this given node
-    list<string> fringe;
+    //int cakes[4]; // this will represent the current stack of pancakes at this given node
+    //list<string> fringe;
     map<int, string> explored;// this will represent all of the stack variations that have been visited so far, regardless of whether or not they are currently in the fringe.
     map<int, int> costs;
     //list<int> *adj; // this will be used to track what nodes are able to be traveled to from our current node
@@ -84,10 +84,10 @@ void Graph::flipCakes(int cakes[], int flipSpot){ // we're essentially reversing
 }
 
 
-void Graph::buildArr(string input){ // this will build the pancake stack array
+/*void Graph::buildArr(string input){ // this will build the pancake stack array
     // It can be assumed that the string will be 5 characters
     // 4 characters for the pancake stack, and one telling us what the type of search is going to be 
     for(int j = 0; j < 4; j++){
         cakes[j] = stoi(input.substr(j, j+1));
     }
-}
+}*/

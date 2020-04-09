@@ -93,6 +93,33 @@ void Graph::aStar(int cakes[], list<string> fringe){
 
 
 int main(){
-
+    string input;
+    string theCakes;
+    string search;
+    list<string> fringe;
+    int cakes[4];
+    Graph g(1); // this is just creating a Graph object that has the first node id automatically set to 1
+    cout << "Hello! Please input your pancake stack, and your preferred search method (d for DFS, a for a*)" << endl;
+    cin >> input; // taking in the input from the user. Should be a 5 character string
+    if(input.size() == 5){ // checking to make sure the input is 5 characters
+        theCakes = input.substr(0,3);
+        search = input.substr(3,4); // these two methods are separating the cakes, as well as taking out the chosen search method
+        for(int j = 0; j < 4; j++){
+            cakes[j] = stoi(theCakes.substr(j, j+1)); // creating our cakes array
+        }
+        if(search.compare("d") == 0){
+            g.DFS(cakes, fringe);
+        }
+        else if(search.compare("a") == 0){
+            g.aStar(cakes, fringe);
+        }
+        else{
+            cout << "ERROR: Please select either 'd'(DFS) or 'a'(aStar)" << endl;
+        }
+    }
+    else{
+        cout << "ERROR: Please input a 5 character string consisting of your startng pancake order and your search selection" << endl;
+    }
+    return 0;
 }
 
