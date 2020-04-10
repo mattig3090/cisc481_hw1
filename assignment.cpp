@@ -71,6 +71,9 @@ int Graph::DFS(int cakes[], list<string> fringe){ // treating this essentially l
         }
         else{ // this means that we don't have to go up a level, and also now this stack config is added to the fringe! Now we just get the cost, 
         // add that to the cost identifier map, and then flip the cakes at a given spot and then do this whole shindig over again until we have our winner!
+        if(explored.find(cakeString) == explored.end()){ // we'll figure out a way to handle this
+            cout << "Node already explored" << endl;
+        }
         int flipCost = getCost(cakes, numFlip);
         cout << "Got that cost BOI" << endl;
         costs.insert({this->id - 1, flipCost}); // doing 'id-1' because the id number is incremented in DFSUtil(). ID number should be to help us with a*, but if we need to add something extra for that we can
@@ -95,17 +98,55 @@ int Graph::DFS(int cakes[], list<string> fringe){ // treating this essentially l
 }
 
 
-int Graph::getHeu(int cakes[]){
+int Graph::getHeu(int cakes[]){ // this is going to give us our heuristic. The heuristic is going to be based off how many pancakes are out of order currently.
+    int heuristic;
+    // we can figure out our heuristic by making sure that each pancake is in it's proper spot (cake 4 is in spot 0, 3 is in 1, and so on)
+    // for each cake that is NOT in it's proper position, we increment 'heuristic' by 1
+    int spotCheck = 4;
+    for(int i = 0; i < 3; i++){
+        if(cakes[i] != spotCheck){
+            heuristic++;
+            spotCheck--;
+        }
+        else{
+            spotCheck--;
+        }
+    }
+    return heuristic;
 
 }
 
 
-int bestFlip(int cakes[]){ // this is what will use getHeu(). NOT aStar(). Should also use getCost. 
-    int theChosen;
+int Graph::bestFlip(int cakes[]){ // this is what will use getHeu(). NOT aStar(). Should also use getCost. 
+    int theChosen; // this will be the spot at which inserting our spatula will provide the best possible result.
+    int totalCost; // this will represent the sum of the forward and backward costs.
+    int fCost; // this is where we will save the value gotten from getHeu(). This is forward cost.
+    int bCost; // this is where we are going to save the value gotten from getCost(). This is backward cost
+    int experiment[4]; // this is going to be our test dummy for flipping pancakes
+    int flipCost;
+    for(int i = 2; i <= 4; i++){
+        for(int j = 0; j < 4; j++){ // this is merely resetting our experiment array to what it originally should be
+            experiment[j] = cakes[j];
+        }
+        bCost = this->cost; // resets currentTotal to the global total
+        flipCost = getCost(cakes, i);
+        bCost += flipCost;
+        flipCakes(experiment, i); // flipping the cakes so we can check the heuristic with the updated cakes.
+        fCost = getHeu(experiment); // this is running the heuristic function 
+        totalCost = fCost + bCost;
+        if(theChosen == 0){
+            theChosen = totalCost;
+        }
+        else if(totalCost > 0 && totalCost < theChosen){
+            theChosen = totalCost; // this means that it is a less costly path because the f(n) is smaller
+        }
+    }
+    return theChosen;   
 }
 
 
-void Graph::aStar(int cakes[], list<string> fringe){
+void Graph::aStar(int cakes[], unordered_map<string, int> explored){
+    cout << "Running aStar" << endl;
     
 }
 

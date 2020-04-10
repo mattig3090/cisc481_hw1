@@ -27,7 +27,7 @@ class Graph{ // This is essentially being used to create a given node
 public:
     Graph(int id, int cost);
     //void addEdge(int v, int w); // this will be connecting points
-    void aStar(int cakes[], list<string> fringe);
+    void aStar(int cakes[], unordered_map<string,int> explored);
     int DFS(int cakes[], list<string> fringe);
 };
 
