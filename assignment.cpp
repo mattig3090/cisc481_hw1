@@ -197,10 +197,7 @@ int main(){
     cin >> input; // taking in the input from the user. Should be a 5 character string
     if(input.size() == 4){ // checking to make sure the input is 5 characters
         for(int j = 0; j <= 3; j++){
-            cout << "j: " << j << endl;
-            cout << "j+1: " << j+1 << endl;
             digit = input.substr(j, 1);
-            cout << "the following number has been isolated: " << digit << endl;
             stringstream(digit) >> dig;
             cakes[j] = dig; // creating our cakes array
         }
