@@ -14,7 +14,7 @@ bool Graph::DFSUtil(int cakes[], list<string> fringe){ // this is just adding th
     for(int i = 0; i < 3; i++){
         cakeString = cakeString + to_string(cakes[i]);
     } // converting our int array to a string so it can be easily passed through the list.
-    explored.insert({this->id, cakeString}); // we store this node in the "explored map" regardless of whether it's in the fringe or not... Something tells me we won't need this 
+    explored.insert({cakeString, this->id}); // we store this node in the "explored map" regardless of whether it's in the fringe or not... Something tells me we won't need this 
     this->id = this->id + 1;
     std::list<string>::iterator it; // this gonna be what goes through and sees if the stack exists in the fringe
     it = find(fringe.begin(), fringe.end(), cakeString);
@@ -35,6 +35,7 @@ void Graph::goBack(int cakes[], list<string> fringe){ // this is gonna let us go
     // we can probably just pop that last node off the fringe right from the get go, and then just set the stack to be the new end of the fringe... that makes sense yeah...
     // because you can't go backwards in the linked list, but you CAN access the last element using fringe.back()
     fringe.pop_back(); // so let's get that untrustworthy node off the fringe
+    cout << "New last element is: " << fringe.back() << endl;
     string newState = fringe.back(); // now let's get the stack state of the previous level
     // and we're gonna do this kinda piecemeal, but we're gonna methodically replace each element in the array with the ones in the string
     for(int j = 0; j < 4; j++){
@@ -45,17 +46,22 @@ void Graph::goBack(int cakes[], list<string> fringe){ // this is gonna let us go
 int Graph::DFS(int cakes[], list<string> fringe){ // treating this essentially like a normal DFS. This is a traversal of all things reachable from this given node. Since we are going to likely run this
     // recursively, we can pass in the current stack of cakes that we are looking at.
     // the first time this runs, "cakes[]" represents the start state of our stack!
+    cout << "Running DFS" << endl;
     string cakeString = "";
     for(int i = 0; i < 3; i++){
         cakeString = cakeString + to_string(cakes[i]);
     } // converting our int array to a string so we can check if we've achieved our goal state!
     if(cakeString == "4321"){ // if we reached our goal state
+        cout << "GOALLLLLLLLL" << endl;
         return 0; // stop the function!
     }
     else{ // proceed through the function
         int numFlip = 2; // this will represent how many pancakes we are gonna try to flip
         if(DFSUtil(cakes,fringe) == false){ // let's check right out of the gate and make sure that we don't have to go back up a level
+            cout << "WE HAVE TO GO BACK" << endl; // this means that the stack config is already on the fringe, so we now go back up a level
             goBack(cakes, fringe);
+            int costLess = costs.at(explored.at(cakeString)); // this is telling us what we need to subtract from the total cost since we are going back up a level.
+            this->cost = this->cost - costLess;
             if(numFlip + 1 > 4){
                 numFlip = 2;
             }
@@ -65,9 +71,11 @@ int Graph::DFS(int cakes[], list<string> fringe){ // treating this essentially l
         }
         else{ // this means that we don't have to go up a level, and also now this stack config is added to the fringe! Now we just get the cost, 
         // add that to the cost identifier map, and then flip the cakes at a given spot and then do this whole shindig over again until we have our winner!
-        int cost = getCost(cakes, numFlip);
-        costs.insert({this->id - 1, cost}); // doing 'id-1' because the id number is incremented in DFSUtil(). ID number should be to help us with a*, but if we need to add something extra for that we can
+        int flipCost = getCost(cakes, numFlip);
+        cout << "Got that cost BOI" << endl;
+        costs.insert({this->id - 1, flipCost}); // doing 'id-1' because the id number is incremented in DFSUtil(). ID number should be to help us with a*, but if we need to add something extra for that we can
         flipCakes(cakes, numFlip);
+        cout << "Cakes flipped" << endl;
         DFS(cakes, fringe);
         }
     }

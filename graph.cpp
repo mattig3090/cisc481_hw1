@@ -1,7 +1,7 @@
 #include <iostream>
 #include <list>
 #include <string>
-#include <map>
+#include <unordered_map>
 using namespace std;
 
 class Graph{ // This is essentially being used to create a given node
@@ -9,27 +9,31 @@ class Graph{ // This is essentially being used to create a given node
     //int cost; // this will represent the cost to achieve this state from the previous state
     //int cakes[4]; // this will represent the current stack of pancakes at this given node
     //list<string> fringe;
-    map<int, string> explored;// this will represent all of the stack variations that have been visited so far, regardless of whether or not they are currently in the fringe.
-    map<int, int> costs;
+    int cost; // this is the total overall cost
+    unordered_map<string, int> explored;// this will represent all of the stack variations that have been visited so far, regardless of whether or not they are currently in the fringe.
+    // this will be useful 
+    unordered_map<int, int> costs;
     //list<int> *adj; // this will be used to track what nodes are able to be traveled to from our current node
     int start; // this is gonna be a identifier for the initial node in the thing
     bool DFSUtil(int cakes[], list<string> fringe);
     void buildArr(string input);
     void goBack(int cakes[], list<string> fringe);
+    void getHeu(int cakes[]); // this is for a*. This'll tell us how many pancakes are out of place for calculating forward cost.
+    int bestFlip(int cakes[]); // this is for determining, combined with getHeu(), what the best direction to go in for getting the right answer is.
     int getCost(int cakes[], int flipSpot); // this is a little helper that we're making to help us get the cost of flipping a given set of pancakes
     void flipCakes(int cakes[], int flipSpot); // this is a helper that is going to do the actual flipping. The cost is calculated in getCost.
     // note. We should be calling getCost() and flipCakes() SEPARATELY!!!
     
 public:
-    Graph(int id);
+    Graph(int id, int cost);
     //void addEdge(int v, int w); // this will be connecting points
     void aStar(int cakes[], list<string> fringe);
     int DFS(int cakes[], list<string> fringe);
 };
 
-Graph::Graph(int id){
+Graph::Graph(int id, int cost){
     this->id = id;
-    //this->cost = cost;
+    this->cost = cost;
     //adj = new list<int>[];
 }
 
