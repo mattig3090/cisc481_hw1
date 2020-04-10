@@ -18,7 +18,7 @@ class Graph{ // This is essentially being used to create a given node
     bool DFSUtil(int cakes[], list<string> fringe);
     void buildArr(string input);
     void goBack(int cakes[], list<string> fringe);
-    void getHeu(int cakes[]); // this is for a*. This'll tell us how many pancakes are out of place for calculating forward cost.
+    int getHeu(int cakes[]); // this is for a*. This'll tell us how many pancakes are out of place for calculating forward cost.
     int bestFlip(int cakes[]); // this is for determining, combined with getHeu(), what the best direction to go in for getting the right answer is.
     int getCost(int cakes[], int flipSpot); // this is a little helper that we're making to help us get the cost of flipping a given set of pancakes
     void flipCakes(int cakes[], int flipSpot); // this is a helper that is going to do the actual flipping. The cost is calculated in getCost.

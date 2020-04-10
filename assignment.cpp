@@ -66,7 +66,7 @@ int Graph::DFS(int cakes[], list<string> fringe){ // treating this essentially l
                 numFlip = 2;
             }
             else{ 
-                numFlip++;
+                numFlip++; 
             }
         }
         else{ // this means that we don't have to go up a level, and also now this stack config is added to the fringe! Now we just get the cost, 
@@ -94,6 +94,17 @@ int Graph::DFS(int cakes[], list<string> fringe){ // treating this essentially l
     }*/
 }
 
+
+int Graph::getHeu(int cakes[]){
+
+}
+
+
+int bestFlip(int cakes[]){ // this is what will use getHeu(). NOT aStar(). Should also use getCost. 
+    int theChosen;
+}
+
+
 void Graph::aStar(int cakes[], list<string> fringe){
     
 }
@@ -106,7 +117,7 @@ int main(){
     string search;
     list<string> fringe;
     int cakes[4];
-    Graph g(1); // this is just creating a Graph object that has the first node id automatically set to 1
+    Graph g(1, 0); // this is just creating a Graph object that has the first node id automatically set to 1
     cout << "Hello! Please input your pancake stack, and your preferred search method (d for DFS, a for a*)" << endl;
     cin >> input; // taking in the input from the user. Should be a 5 character string
     if(input.size() == 5){ // checking to make sure the input is 5 characters
