@@ -120,6 +120,7 @@ int Graph::getHeu(int cakes[]){ // this is going to give us our heuristic. The h
 int Graph::bestFlip(int cakes[]){ // this is what will use getHeu(). NOT aStar(). Should also use getCost. 
     int theChosen; // this will be the spot at which inserting our spatula will provide the best possible result.
     int totalCost; // this will represent the sum of the forward and backward costs.
+    int bestCost; // this is the cost that will be connected to whatever is the best pancake flip choice
     int fCost; // this is where we will save the value gotten from getHeu(). This is forward cost.
     int bCost; // this is where we are going to save the value gotten from getCost(). This is backward cost
     int experiment[4]; // this is going to be our test dummy for flipping pancakes
@@ -134,22 +135,48 @@ int Graph::bestFlip(int cakes[]){ // this is what will use getHeu(). NOT aStar()
         flipCakes(experiment, i); // flipping the cakes so we can check the heuristic with the updated cakes.
         fCost = getHeu(experiment); // this is running the heuristic function 
         totalCost = fCost + bCost;
-        if(theChosen == 0){
-            theChosen = totalCost;
+        if(theChosen == 0){ // seeing how theChosen can only be 2,3, or 4, if it's 0, that means it hasn't been set yet.
+            theChosen = i;
         }
-        else if(totalCost > 0 && totalCost < theChosen){
-            theChosen = totalCost; // this means that it is a less costly path because the f(n) is smaller
+        else if(totalCost > 0 && totalCost < bestCost){
+            bestCost = totalCost; // this means that it is a less costly path because the f(n) is smaller
+            theChosen = i;
         }
     }
-    return theChosen;   
+    this->cost = bCost;
+    cout << "Cost value is: " << this->cost << " Heuristic value is: " << fCost << endl;
+    return theChosen; // in aStar, the best flip spot will be used when we actually flip our pancakes for real. Here, it was just an experiment to see what works
 }
 
 
-void Graph::aStar(int cakes[], unordered_map<string, int> explored){
+int Graph::aStar(int cakes[], unordered_map<string, int> explored){
     cout << "Running aStar" << endl;
+    string cakeString = "";
+    int bestFlipSpot; // this is what will be passed into the flipCakes() method
+    for(int i = 0; i < 3; i++){
+        cakeString = cakeString + to_string(cakes[i]);
+    } // converting our int array to a string so we can check if we've achieved our goal state!
+    if(cakeString == "4321"){ // if we reached our goal state
+        cout << "GOALLLLLLLLL" << endl;
+        return 0; // stop the function! That's what this is for.
+    }
+    else{ // meaning we haven't reached the goal yet.
+        if(explored.find(cakeString) == explored.end()){
+            // do something... not sure what tho...
+        }
+        else{
+            explored.insert({cakeString,this->id});
+            this->id += 1;
+            bestFlipSpot = bestFlip(cakes); // determine what the next best spot to go is.
+            flipCakes(cakes,bestFlipSpot); // flip the pancakes based on where the next good spot is
+            aStar(cakes, explored); // and then run this bad boy again!
+        } 
+    }
     
 }
 
+// one thing I might do, instead of having all the functions be recursive, is just toss them all in a while loop that says like "while not at the goal state, do all this stuff"
+// idk we can look into it since (seemingly) we have all the code. Who knows though so we can figure this out tomorrow for sure.
 
 
 int main(){
@@ -157,6 +184,7 @@ int main(){
     string theCakes;
     string search;
     list<string> fringe;
+    unordered_map<string, int> explored;
     int cakes[4];
     Graph g(1, 0); // this is just creating a Graph object that has the first node id automatically set to 1
     cout << "Hello! Please input your pancake stack, and your preferred search method (d for DFS, a for a*)" << endl;
@@ -171,7 +199,7 @@ int main(){
             g.DFS(cakes, fringe);
         }
         else if(search.compare("a") == 0){
-            g.aStar(cakes, fringe);
+            g.aStar(cakes, explored);
         }
         else{
             cout << "ERROR: Please select either 'd'(DFS) or 'a'(aStar)" << endl;

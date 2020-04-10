@@ -27,7 +27,7 @@ class Graph{ // This is essentially being used to create a given node
 public:
     Graph(int id, int cost);
     //void addEdge(int v, int w); // this will be connecting points
-    void aStar(int cakes[], unordered_map<string,int> explored);
+    int aStar(int cakes[], unordered_map<string,int> explored);
     int DFS(int cakes[], list<string> fringe);
 };
 
@@ -56,13 +56,15 @@ int getCost(int flipSpot){ // the big thing for this is, since we know there's o
 
 void Graph::flipCakes(int cakes[], int flipSpot){ // we're essentially reversing the order of whatever pancakes we are flipping
     string cakeString = "";
+    string ptOne; // ptOne and ptTwo might not be used, but if they are initialized in the switch case it causes errors on line 64
+    string ptTwo;
     for(int i = 0; i < 3; i++){
         cakeString = cakeString + to_string(cakes[i]);
     } // converting our int array to a string so it can be easily passed through the list.
     switch(flipSpot){ // determines what to do based on the value of 'flipSpot'
         case 0: // this is flipping literally THE ENTIRE STACK (from a comp sci perspective this makes sense but from a food perspective... WHY WOULD YOU DO THIS)
             // Obviously there's so many different ways we can do this, but for sanity's sake let's just swap the two outer cakes, and then the two inner ones
-            //cout << cakeString << "|" << endl;
+            cout << cakeString << "|" << endl;
             int temp = cakes[0];
             cakes[0] = cakes[3];
             cakes[3] = temp;
@@ -72,14 +74,17 @@ void Graph::flipCakes(int cakes[], int flipSpot){ // we're essentially reversing
             // probably not the best way, but at the end of the day the problem's about searches, not flipping pancakes.
             break;
         case 1: // here we are flipping the top 3 cakes. We can just swap the first and third cake, as the middle one in this is virtually unaffected.
-           // string ptOne = cakeString.substr(0,2);
-            //string ptTwo = cakeString.substr(2,3);
-            //cout << ptOne << "|" << ptTwo << endl;
+            ptOne = cakeString.substr(0,2);
+            ptTwo = cakeString.substr(2,3);
+            cout << ptOne << "|" << ptTwo << endl;
             int temp = cakes[0];
             cakes[0] = cakes[2];
             cakes[2] = temp;
             break;
         case 2: 
+            ptOne = cakeString.substr(0,2);
+            ptTwo = cakeString.substr(1,3);
+            cout << ptOne << "|" << ptTwo << endl;
             int temp = cakes[0];
             cakes[0] = cakes[1];
             cakes[1] = temp;
