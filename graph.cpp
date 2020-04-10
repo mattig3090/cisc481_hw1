@@ -16,28 +16,87 @@ class Graph{ // This is essentially being used to create a given node
     //list<int> *adj; // this will be used to track what nodes are able to be traveled to from our current node
     int start; // this is gonna be a identifier for the initial node in the thing
     bool DFSUtil(int cakes[], list<string> fringe);
-    void buildArr(string input);
+    //void buildArr(string input);
     void goBack(int cakes[], list<string> fringe);
     int getHeu(int cakes[]); // this is for a*. This'll tell us how many pancakes are out of place for calculating forward cost.
     int bestFlip(int cakes[]); // this is for determining, combined with getHeu(), what the best direction to go in for getting the right answer is.
-    int getCost(int cakes[], int flipSpot); // this is a little helper that we're making to help us get the cost of flipping a given set of pancakes
-    void flipCakes(int cakes[], int flipSpot); // this is a helper that is going to do the actual flipping. The cost is calculated in getCost.
+    int getCost(int flipSpot) {// this is a little helper that we're making to help us get the cost of flipping a given set of pancakes
+        switch(flipSpot){
+            case 0:
+                cout << "Cost is 4" << endl;
+                return 4;
+                break;
+            case 1:
+                cout << "Cost is 3" << endl;
+                return 3; // because in the stack, it's being inserted between the 3rd and 4th pancakes
+                break;
+            case 2:
+                cout << "Cost is 2" << endl;
+                return 2; // in the stack, being inserted between 2nd and 3rd pancakes
+                break;
+        }
+    }
+    void flipCakes(int cakes[], int flipSpot){ // this is a helper that is going to do the actual flipping. The cost is calculated in getCost.
     // note. We should be calling getCost() and flipCakes() SEPARATELY!!!
+        string cakeString = "";
+
+        for(int i = 0; i < 3; i++){
+            cakeString = cakeString + to_string(cakes[i]);
+        } // converting our int array to a string so it can be easily passed through the list.
+        switch(flipSpot){ // determines what to do based on the value of 'flipSpot'
+            case 0: // this is flipping literally THE ENTIRE STACK (from a comp sci perspective this makes sense but from a food perspective... WHY WOULD YOU DO THIS)
+            // Obviously there's so many different ways we can do this, but for sanity's sake let's just swap the two outer cakes, and then the two inner ones
+                {
+                    cout << cakeString << "|" << endl;
+                    int tempOne = cakes[0];
+                    cakes[0] = cakes[3];
+                    cakes[3] = tempOne;
+                    tempOne = cakes[1];
+                    cakes[1] = cakes[2];
+                    cakes[2] = tempOne;
+                    // probably not the best way, but at the end of the day the problem's about searches, not flipping pancakes.
+                    break;
+            }
+            case 1: // here we are flipping the top 3 cakes. We can just swap the first and third cake, as the middle one in this is virtually unaffected.
+                {
+                    string ptOne = cakeString.substr(0,2);
+                    string ptTwo = cakeString.substr(2,3);
+                    cout << ptOne << "|" << ptTwo << endl;
+                    int tempTwo = cakes[0];
+                    cakes[0] = cakes[2];
+                    cakes[2] = tempTwo;
+                    break;
+            }
+            case 2: // and here we are just flipping the first two cakes. Simple swap job!!!
+                {
+                    string ptOne = cakeString.substr(0,2);
+                    string ptTwo = cakeString.substr(1,3);
+                    cout << ptOne << "|" << ptTwo << endl;
+                    int tempThree = cakes[0];
+                    cakes[0] = cakes[1];
+                    cakes[1] = tempThree;
+                    break;
+            }
+        }
+    }
     
 public:
-    Graph(int id, int cost);
+    Graph(int id, int cost){
+        this->id = id;
+        this->cost = cost;
+    }
     //void addEdge(int v, int w); // this will be connecting points
     int aStar(int cakes[], unordered_map<string,int> explored);
     int DFS(int cakes[], list<string> fringe);
 };
 
-Graph::Graph(int id, int cost){
+/*Graph::Graph(int id, int cost){
     this->id = id;
     this->cost = cost;
     //adj = new list<int>[];
-}
+}*/
 
-int getCost(int flipSpot){ // the big thing for this is, since we know there's only four pancakes, we just need to know where in the stack we're inserting the spatula
+/*int Graph::getCost(int flipSpot){ // the big thing for this is, since we know there's only four pancakes, we just need to know where in the stack we're inserting the spatula
     switch(flipSpot){
         case 0:
             cout << "Cost is 4" << endl;
@@ -52,45 +111,50 @@ int getCost(int flipSpot){ // the big thing for this is, since we know there's o
             return 2; // in the stack, being inserted between 2nd and 3rd pancakes
             break;
     }
-}
+}*/
 
-void Graph::flipCakes(int cakes[], int flipSpot){ // we're essentially reversing the order of whatever pancakes we are flipping
+/*void Graph::flipCakes(int cakes[], int flipSpot){ // we're essentially reversing the order of whatever pancakes we are flipping
     string cakeString = "";
-    string ptOne; // ptOne and ptTwo might not be used, but if they are initialized in the switch case it causes errors on line 64
-    string ptTwo;
+
     for(int i = 0; i < 3; i++){
         cakeString = cakeString + to_string(cakes[i]);
     } // converting our int array to a string so it can be easily passed through the list.
     switch(flipSpot){ // determines what to do based on the value of 'flipSpot'
         case 0: // this is flipping literally THE ENTIRE STACK (from a comp sci perspective this makes sense but from a food perspective... WHY WOULD YOU DO THIS)
             // Obviously there's so many different ways we can do this, but for sanity's sake let's just swap the two outer cakes, and then the two inner ones
-            cout << cakeString << "|" << endl;
-            int temp = cakes[0];
-            cakes[0] = cakes[3];
-            cakes[3] = temp;
-            temp = cakes[1];
-            cakes[1] = cakes[2];
-            cakes[2] = temp;
-            // probably not the best way, but at the end of the day the problem's about searches, not flipping pancakes.
-            break;
+            {
+                cout << cakeString << "|" << endl;
+                int tempOne = cakes[0];
+                cakes[0] = cakes[3];
+                cakes[3] = tempOne;
+                tempOne = cakes[1];
+                cakes[1] = cakes[2];
+                cakes[2] = tempOne;
+                // probably not the best way, but at the end of the day the problem's about searches, not flipping pancakes.
+                break;
+            }
         case 1: // here we are flipping the top 3 cakes. We can just swap the first and third cake, as the middle one in this is virtually unaffected.
-            ptOne = cakeString.substr(0,2);
-            ptTwo = cakeString.substr(2,3);
-            cout << ptOne << "|" << ptTwo << endl;
-            int temp = cakes[0];
-            cakes[0] = cakes[2];
-            cakes[2] = temp;
-            break;
+            {
+                string ptOne = cakeString.substr(0,2);
+                string ptTwo = cakeString.substr(2,3);
+                cout << ptOne << "|" << ptTwo << endl;
+                int tempTwo = cakes[0];
+                cakes[0] = cakes[2];
+                cakes[2] = tempTwo;
+                break;
+            }
         case 2: // and here we are just flipping the first two cakes. Simple swap job!!!
-            ptOne = cakeString.substr(0,2);
-            ptTwo = cakeString.substr(1,3);
-            cout << ptOne << "|" << ptTwo << endl;
-            int temp = cakes[0];
-            cakes[0] = cakes[1];
-            cakes[1] = temp;
-            break;
+            {
+                string ptOne = cakeString.substr(0,2);
+                string ptTwo = cakeString.substr(1,3);
+                cout << ptOne << "|" << ptTwo << endl;
+                int tempThree = cakes[0];
+                cakes[0] = cakes[1];
+                cakes[1] = tempThree;
+                break;
+            }
     }
-}
+}*/
 
 
 /*void Graph::buildArr(string input){ // this will build the pancake stack array

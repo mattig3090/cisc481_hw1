@@ -2,8 +2,11 @@
 #include "graph.cpp"
 #include <string>
 #include <iterator>
+#include <algorithm>
+#include <sstream>
 
 using namespace std;
+
 
 bool Graph::DFSUtil(int cakes[], list<string> fringe){ // this is just adding this set of cakes to the fringe
     // we can also, either way, add it to the list of nodes that have been explored.
@@ -56,14 +59,14 @@ int Graph::DFS(int cakes[], list<string> fringe){ // treating this essentially l
         return 0; // stop the function!
     }
     else{ // proceed through the function
-        int numFlip = 2; // this will represent how many pancakes we are gonna try to flip
+        int numFlip = 0; // this will represent how many pancakes we are gonna try to flip
         if(DFSUtil(cakes,fringe) == false){ // let's check right out of the gate and make sure that we don't have to go back up a level
             cout << "WE HAVE TO GO BACK" << endl; // this means that the stack config is already on the fringe, so we now go back up a level
             goBack(cakes, fringe);
             int costLess = costs.at(explored.at(cakeString)); // this is telling us what we need to subtract from the total cost since we are going back up a level.
             this->cost = this->cost - costLess;
-            if(numFlip + 1 > 4){
-                numFlip = 2;
+            if(numFlip + 1 >= 2){
+                numFlip = 0;
             }
             else{ 
                 numFlip++; 
@@ -74,7 +77,7 @@ int Graph::DFS(int cakes[], list<string> fringe){ // treating this essentially l
         if(explored.find(cakeString) == explored.end()){ // we'll figure out a way to handle this
             cout << "Node already explored" << endl;
         }
-        int flipCost = getCost(cakes, numFlip);
+        int flipCost = getCost(numFlip);
         cout << "Got that cost BOI" << endl;
         costs.insert({this->id - 1, flipCost}); // doing 'id-1' because the id number is incremented in DFSUtil(). ID number should be to help us with a*, but if we need to add something extra for that we can
         flipCakes(cakes, numFlip);
@@ -125,12 +128,12 @@ int Graph::bestFlip(int cakes[]){ // this is what will use getHeu(). NOT aStar()
     int bCost; // this is where we are going to save the value gotten from getCost(). This is backward cost
     int experiment[4]; // this is going to be our test dummy for flipping pancakes
     int flipCost;
-    for(int i = 2; i <= 4; i++){
+    for(int i = 0; i <= 2; i++){
         for(int j = 0; j < 4; j++){ // this is merely resetting our experiment array to what it originally should be
             experiment[j] = cakes[j];
         }
         bCost = this->cost; // resets currentTotal to the global total
-        flipCost = getCost(cakes, i);
+        flipCost = getCost(i);
         bCost += flipCost;
         flipCakes(experiment, i); // flipping the cakes so we can check the heuristic with the updated cakes.
         fCost = getHeu(experiment); // this is running the heuristic function 
@@ -183,30 +186,35 @@ int main(){
     string input;
     string theCakes;
     string search;
+    string digit;
+    int dig;
     list<string> fringe;
     unordered_map<string, int> explored;
     int cakes[4];
     Graph g(1, 0); // this is just creating a Graph object that has the first node id automatically set to 1
     cout << "Hello! Please input your pancake stack, and your preferred search method (d for DFS, a for a*)" << endl;
     cin >> input; // taking in the input from the user. Should be a 5 character string
-    if(input.size() == 5){ // checking to make sure the input is 5 characters
+    if(input.size() == 4){ // checking to make sure the input is 5 characters
         theCakes = input.substr(0,3);
-        search = input.substr(3,4); // these two methods are separating the cakes, as well as taking out the chosen search method
-        for(int j = 0; j < 4; j++){
-            cakes[j] = stoi(theCakes.substr(j, j+1)); // creating our cakes array
-        }
-        if(search.compare("d") == 0){
-            g.DFS(cakes, fringe);
-        }
-        else if(search.compare("a") == 0){
-            g.aStar(cakes, explored);
-        }
-        else{
-            cout << "ERROR: Please select either 'd'(DFS) or 'a'(aStar)" << endl;
+        for(int j = 0; j < 3; j++){
+            digit = theCakes.substr(j, j+1);
+            stringstream(digit) >> dig;
+            cakes[j] = dig; // creating our cakes array
         }
     }
     else{
         cout << "ERROR: Please input a 5 character string consisting of your startng pancake order and your search selection" << endl;
+    }
+    cout << "Awesome! Now choose your search method! Type 'd' for DFS, or 'a' for aStar! " << endl;
+    cin >> input;
+    if(search.compare("d") == 0){
+        g.DFS(cakes, fringe);
+    }
+    else if(search.compare("a") == 0){
+        g.aStar(cakes, explored);
+    }
+    else{
+        cout << "ERROR: Please type either 'd' for DFS, or 'a' for aStar " << endl;
     }
     return 0;
 }
