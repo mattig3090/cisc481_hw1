@@ -26,6 +26,7 @@ bool Graph::DFSUtil(int cakes[], list<string> fringe){ // this is just adding th
     }
     else{ // means that this cake does NOT already exist in the fringe, meaning we might find a potential winner here! (yuh)
         fringe.push_back(cakeString); // so add that bad boy into the fringe!
+        cout << "added " << cakeString << " to fringe" << endl;
         return true;
     }
 }
@@ -42,7 +43,7 @@ void Graph::goBack(int cakes[], list<string> fringe){ // this is gonna let us go
     string newState = fringe.back(); // now let's get the stack state of the previous level
     // and we're gonna do this kinda piecemeal, but we're gonna methodically replace each element in the array with the ones in the string
     for(int j = 0; j < 4; j++){
-        cakes[j] = stoi(newState.substr(j, j+1)); // same as buildArr, but this is to make sure that the array is directly changed, and we don't accidentally make a new one
+        cakes[j] = stoi(newState.substr(j, 1)); // same as buildArr, but this is to make sure that the array is directly changed, and we don't accidentally make a new one
     } 
 }
 
@@ -51,7 +52,7 @@ int Graph::DFS(int cakes[], list<string> fringe){ // treating this essentially l
     // the first time this runs, "cakes[]" represents the start state of our stack!
     cout << "Running DFS" << endl;
     string cakeString = "";
-    for(int i = 0; i < 3; i++){
+    for(int i = 0; i <= 3; i++){
         cakeString = cakeString + to_string(cakes[i]);
     } // converting our int array to a string so we can check if we've achieved our goal state!
     if(cakeString == "4321"){ // if we reached our goal state
@@ -192,25 +193,27 @@ int main(){
     unordered_map<string, int> explored;
     int cakes[4];
     Graph g(1, 0); // this is just creating a Graph object that has the first node id automatically set to 1
-    cout << "Hello! Please input your pancake stack, and your preferred search method (d for DFS, a for a*)" << endl;
+    cout << "Hello! Please input your pancake stack!" << endl;
     cin >> input; // taking in the input from the user. Should be a 5 character string
     if(input.size() == 4){ // checking to make sure the input is 5 characters
-        theCakes = input.substr(0,3);
-        for(int j = 0; j < 3; j++){
-            digit = theCakes.substr(j, j+1);
+        for(int j = 0; j <= 3; j++){
+            cout << "j: " << j << endl;
+            cout << "j+1: " << j+1 << endl;
+            digit = input.substr(j, 1);
+            cout << "the following number has been isolated: " << digit << endl;
             stringstream(digit) >> dig;
             cakes[j] = dig; // creating our cakes array
         }
     }
     else{
-        cout << "ERROR: Please input a 5 character string consisting of your startng pancake order and your search selection" << endl;
+        cout << "ERROR: Please input a 4 character string consisting of your starting pancake stack!" << endl;
     }
     cout << "Awesome! Now choose your search method! Type 'd' for DFS, or 'a' for aStar! " << endl;
     cin >> input;
-    if(search.compare("d") == 0){
+    if(search.compare("d") != 0){
         g.DFS(cakes, fringe);
     }
-    else if(search.compare("a") == 0){
+    else if(search.compare("a") != 0){
         g.aStar(cakes, explored);
     }
     else{

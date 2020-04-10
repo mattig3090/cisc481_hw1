@@ -49,9 +49,11 @@ class Graph{ // This is essentially being used to create a given node
                 {
                     cout << cakeString << "|" << endl;
                     int tempOne = cakes[0];
+                    cout << "swapping " << cakes[0] << " and " << cakes[3] << endl;
                     cakes[0] = cakes[3];
                     cakes[3] = tempOne;
                     tempOne = cakes[1];
+                    cout << "swapping " << cakes[1] << " and " << cakes[2] << endl;
                     cakes[1] = cakes[2];
                     cakes[2] = tempOne;
                     // probably not the best way, but at the end of the day the problem's about searches, not flipping pancakes.
@@ -60,7 +62,7 @@ class Graph{ // This is essentially being used to create a given node
             case 1: // here we are flipping the top 3 cakes. We can just swap the first and third cake, as the middle one in this is virtually unaffected.
                 {
                     string ptOne = cakeString.substr(0,2);
-                    string ptTwo = cakeString.substr(2,3);
+                    string ptTwo = cakeString.substr(2,2);
                     cout << ptOne << "|" << ptTwo << endl;
                     int tempTwo = cakes[0];
                     cakes[0] = cakes[2];
@@ -69,8 +71,8 @@ class Graph{ // This is essentially being used to create a given node
             }
             case 2: // and here we are just flipping the first two cakes. Simple swap job!!!
                 {
-                    string ptOne = cakeString.substr(0,2);
-                    string ptTwo = cakeString.substr(1,3);
+                    string ptOne = cakeString.substr(0,1);
+                    string ptTwo = cakeString.substr(1,1);
                     cout << ptOne << "|" << ptTwo << endl;
                     int tempThree = cakes[0];
                     cakes[0] = cakes[1];
