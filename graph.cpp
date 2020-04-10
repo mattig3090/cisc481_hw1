@@ -81,7 +81,7 @@ void Graph::flipCakes(int cakes[], int flipSpot){ // we're essentially reversing
             cakes[0] = cakes[2];
             cakes[2] = temp;
             break;
-        case 2: 
+        case 2: // and here we are just flipping the first two cakes. Simple swap job!!!
             ptOne = cakeString.substr(0,2);
             ptTwo = cakeString.substr(1,3);
             cout << ptOne << "|" << ptTwo << endl;
