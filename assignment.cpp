@@ -44,8 +44,13 @@ void Graph::goBack(int cakes[]){ // this is gonna let us go back to a previous l
     cout << "New last element is: " << this->fringe.back() << endl;
     string newState = this->fringe.back(); // now let's get the stack state of the previous level
     // and we're gonna do this kinda piecemeal, but we're gonna methodically replace each element in the array with the ones in the string
-    for(int j = 0; j < 4; j++){
-        cakes[j] = stoi(newState.substr(j, 1)); // same as buildArr, but this is to make sure that the array is directly changed, and we don't accidentally make a new one
+    cout << "putting array back together" << endl;
+    int returned;
+    for(int j = 0; j <= 3; j++){
+        string c = newState.substr(j, 1);
+        stringstream(c) >> returned;
+        cakes[j] = returned;
+        cout << "succesfully converted this number: " << cakes[j] << endl;
     } 
 }
 

@@ -3,7 +3,8 @@
         "list": "cpp",
         "string": "cpp",
         "unordered_map": "cpp",
-        "xstring": "cpp"
+        "xstring": "cpp",
+        "sstream": "cpp"
     },
     "cquery.cacheDirectory": "${workspaceFolder}/.vscode/cquery_cached_index/"
 }
