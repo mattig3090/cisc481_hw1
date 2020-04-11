@@ -91,5 +91,5 @@ public:
     }
     //void addEdge(int v, int w); // this will be connecting points
     int aStar(int cakes[]);
-    int DFS(int cakes[]);
+    int DFS(int cakes[], int flipSpot);
 };

@@ -48,13 +48,14 @@ void Graph::goBack(int cakes[]){ // this is gonna let us go back to a previous l
     int returned;
     for(int j = 0; j <= 3; j++){
         string c = newState.substr(j, 1);
+        cout << "Number isolated: " << c << endl;
         stringstream(c) >> returned;
         cakes[j] = returned;
         cout << "succesfully converted this number: " << cakes[j] << endl;
     } 
 }
 
-int Graph::DFS(int cakes[]){ // treating this essentially like a normal DFS. This is a traversal of all things reachable from this given node. Since we are going to likely run this
+int Graph::DFS(int cakes[], int flipSpot){ // treating this essentially like a normal DFS. This is a traversal of all things reachable from this given node. Since we are going to likely run this
     // recursively, we can pass in the current stack of cakes that we are looking at.
     // the first time this runs, "cakes[]" represents the start state of our stack!
     cout << "Running DFS" << endl;
@@ -67,31 +68,29 @@ int Graph::DFS(int cakes[]){ // treating this essentially like a normal DFS. Thi
         return 0; // stop the function!
     }
     else{ // proceed through the function
-        int numFlip = 0; // this will represent how many pancakes we are gonna try to flip
+        cout << "Flip spot currently: " << flipSpot << endl;
         if(DFSUtil(cakes) == false){ // let's check right out of the gate and make sure that we don't have to go back up a level
             cout << "WE HAVE TO GO BACK" << endl; // this means that the stack config is already on the fringe, so we now go back up a level
             goBack(cakes);
             int costLess = costs.at(explored.at(cakeString)); // this is telling us what we need to subtract from the total cost since we are going back up a level.
             this->cost = this->cost - costLess;
-            if(numFlip + 1 >= 2){
-                numFlip = 0;
+            flipSpot++;
+            if(flipSpot >= 2){
+                flipSpot = 0;
             }
-            else{ 
-                numFlip++; 
-            }
-            DFS(cakes);
+            DFS(cakes, flipSpot);
         }
         else{ // this means that we don't have to go up a level, and also now this stack config is added to the fringe! Now we just get the cost, 
         // add that to the cost identifier map, and then flip the cakes at a given spot and then do this whole shindig over again until we have our winner!
         if(explored.find(cakeString) != explored.end()){ // we'll figure out a way to handle this
             cout << "Node already explored" << endl;
         }
-        int flipCost = getCost(numFlip);
+        int flipCost = getCost(flipSpot);
         cout << "Got that cost BOI" << endl;
         costs.insert({this->id - 1, flipCost}); // doing 'id-1' because the id number is incremented in DFSUtil(). ID number should be to help us with a*, but if we need to add something extra for that we can
-        flipCakes(cakes, numFlip);
+        flipCakes(cakes, flipSpot);
         cout << "Cakes flipped" << endl;
-        DFS(cakes);
+        DFS(cakes, flipSpot);
         }
     }
     /*int numFlip = 2; // this will represent how many pancakes we are gonna try to flip
@@ -223,7 +222,7 @@ int main(){
     cout << "Awesome! Now choose your search method! Type 'd' for DFS, or 'a' for aStar! " << endl;
     cin >> input;
     if(search.compare("d") != 0){
-        g.DFS(cakes);
+        g.DFS(cakes, 0);
     }
     else if(search.compare("a") != 0){
         g.aStar(cakes);
