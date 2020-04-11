@@ -13,11 +13,12 @@ class Graph{ // This is essentially being used to create a given node
     unordered_map<string, int> explored;// this will represent all of the stack variations that have been visited so far, regardless of whether or not they are currently in the fringe.
     // this will be useful 
     unordered_map<int, int> costs;
+    list<string> fringe;
     //list<int> *adj; // this will be used to track what nodes are able to be traveled to from our current node
     int start; // this is gonna be a identifier for the initial node in the thing
-    bool DFSUtil(int cakes[], list<string> fringe);
+    bool DFSUtil(int cakes[]);
     //void buildArr(string input);
-    void goBack(int cakes[], list<string> fringe);
+    void goBack(int cakes[]);
     int getHeu(int cakes[]); // this is for a*. This'll tell us how many pancakes are out of place for calculating forward cost.
     int bestFlip(int cakes[]); // this is for determining, combined with getHeu(), what the best direction to go in for getting the right answer is.
     int getCost(int flipSpot) {// this is a little helper that we're making to help us get the cost of flipping a given set of pancakes
@@ -40,7 +41,7 @@ class Graph{ // This is essentially being used to create a given node
     // note. We should be calling getCost() and flipCakes() SEPARATELY!!!
         string cakeString = "";
 
-        for(int i = 0; i < 3; i++){
+        for(int i = 0; i <= 3; i++){
             cakeString = cakeString + to_string(cakes[i]);
         } // converting our int array to a string so it can be easily passed through the list.
         switch(flipSpot){ // determines what to do based on the value of 'flipSpot'
@@ -83,11 +84,12 @@ class Graph{ // This is essentially being used to create a given node
     }
     
 public:
-    Graph(int id, int cost){
+    Graph(int id, int cost, list<string> fringe){
         this->id = id;
         this->cost = cost;
+        this->fringe = fringe;
     }
     //void addEdge(int v, int w); // this will be connecting points
-    int aStar(int cakes[], list<string> fringe);
-    int DFS(int cakes[], list<string> fringe);
+    int aStar(int cakes[]);
+    int DFS(int cakes[]);
 };
