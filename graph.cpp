@@ -88,6 +88,6 @@ public:
         this->cost = cost;
     }
     //void addEdge(int v, int w); // this will be connecting points
-    int aStar(int cakes[], unordered_map<string,int> explored);
+    int aStar(int cakes[], list<string> fringe);
     int DFS(int cakes[], list<string> fringe);
 };

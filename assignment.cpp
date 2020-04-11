@@ -72,6 +72,7 @@ int Graph::DFS(int cakes[], list<string> fringe){ // treating this essentially l
             else{ 
                 numFlip++; 
             }
+            DFS(cakes, fringe);
         }
         else{ // this means that we don't have to go up a level, and also now this stack config is added to the fringe! Now we just get the cost, 
         // add that to the cost identifier map, and then flip the cakes at a given spot and then do this whole shindig over again until we have our winner!
@@ -153,7 +154,7 @@ int Graph::bestFlip(int cakes[]){ // this is what will use getHeu(). NOT aStar()
 }
 
 
-int Graph::aStar(int cakes[], unordered_map<string, int> explored){
+int Graph::aStar(int cakes[], list<string> fringe){
     cout << "Running aStar" << endl;
     string cakeString = "";
     int bestFlipSpot; // this is what will be passed into the flipCakes() method
@@ -165,15 +166,22 @@ int Graph::aStar(int cakes[], unordered_map<string, int> explored){
         return 0; // stop the function! That's what this is for.
     }
     else{ // meaning we haven't reached the goal yet.
-        if(explored.find(cakeString) == explored.end()){
-            // do something... not sure what tho...
+        list<string>::iterator it;
+        it = find(fringe.begin(), fringe.end(), cakeString);
+        if(it != fringe.end()){
+            explored.insert({cakeString, this->id});
+            this->id++;
+            goBack(cakes, fringe);
+            int costLess = costs.at(explored.at(cakeString));
+            this->cost -= costLess;
+            aStar(cakes, fringe);
         }
         else{
             explored.insert({cakeString,this->id});
-            this->id += 1;
+            this->id++;
             bestFlipSpot = bestFlip(cakes); // determine what the next best spot to go is.
             flipCakes(cakes,bestFlipSpot); // flip the pancakes based on where the next good spot is
-            aStar(cakes, explored); // and then run this bad boy again!
+            aStar(cakes, fringe); // and then run this bad boy again!
         } 
     }
     
